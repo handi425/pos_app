@@ -8,7 +8,7 @@ part 'categories_dao.g.dart';
 @DriftAccessor(tables: [CategoriesTable])
 class CategoriesDao extends DatabaseAccessor<PosDatabase>
     with _$CategoriesDaoMixin {
-  CategoriesDao(PosDatabase db) : super(db);
+  CategoriesDao(super.db);
 
   Future<int> create(String name) {
     return into(

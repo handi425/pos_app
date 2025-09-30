@@ -57,7 +57,7 @@ class CashFlowSummary {
   ],
 )
 class ReportsDao extends DatabaseAccessor<PosDatabase> with _$ReportsDaoMixin {
-  ReportsDao(PosDatabase db) : super(db);
+  ReportsDao(super.db);
 
   Future<SalesReportSummary> salesSummary(DateTime start, DateTime end) async {
     const sql = '''

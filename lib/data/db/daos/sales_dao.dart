@@ -39,7 +39,7 @@ class SaleInsertResult {
   ],
 )
 class SalesDao extends DatabaseAccessor<PosDatabase> with _$SalesDaoMixin {
-  SalesDao(PosDatabase db) : super(db);
+  SalesDao(super.db);
 
   Future<SaleInsertResult> createSale({
     required SalesTableCompanion sale,

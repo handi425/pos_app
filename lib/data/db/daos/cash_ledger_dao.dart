@@ -8,7 +8,7 @@ part 'cash_ledger_dao.g.dart';
 @DriftAccessor(tables: [CashLedgerTable, UsersTable])
 class CashLedgerDao extends DatabaseAccessor<PosDatabase>
     with _$CashLedgerDaoMixin {
-  CashLedgerDao(PosDatabase db) : super(db);
+  CashLedgerDao(super.db);
 
   Stream<List<CashLedgerTableData>> watchRange(DateTime start, DateTime end) {
     return (select(cashLedgerTable)

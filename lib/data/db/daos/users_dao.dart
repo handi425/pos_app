@@ -7,7 +7,7 @@ part 'users_dao.g.dart';
 
 @DriftAccessor(tables: [UsersTable])
 class UsersDao extends DatabaseAccessor<PosDatabase> with _$UsersDaoMixin {
-  UsersDao(PosDatabase db) : super(db);
+  UsersDao(super.db);
 
   Future<int> createUser(UsersTableCompanion data) {
     return into(usersTable).insert(data);

@@ -16,7 +16,7 @@ class DebtWithCustomer {
   tables: [DebtsTable, DebtPaymentsTable, CashLedgerTable, CustomersTable],
 )
 class DebtsDao extends DatabaseAccessor<PosDatabase> with _$DebtsDaoMixin {
-  DebtsDao(PosDatabase db) : super(db);
+  DebtsDao(super.db);
 
   Stream<List<DebtWithCustomer>> watchOpenDebts() {
     final query =

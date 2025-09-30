@@ -27,7 +27,7 @@ class ProductStockBalance {
 @DriftAccessor(tables: [ProductsTable, CategoriesTable, StockMovementsTable])
 class ProductsDao extends DatabaseAccessor<PosDatabase>
     with _$ProductsDaoMixin {
-  ProductsDao(PosDatabase db) : super(db);
+  ProductsDao(super.db);
 
   Future<int> createProduct(ProductsTableCompanion data) {
     return into(productsTable).insert(data);

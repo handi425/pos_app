@@ -8,7 +8,7 @@ part 'settings_dao.g.dart';
 @DriftAccessor(tables: [StoreSettingsTable])
 class SettingsDao extends DatabaseAccessor<PosDatabase>
     with _$SettingsDaoMixin {
-  SettingsDao(PosDatabase db) : super(db);
+  SettingsDao(super.db);
 
   Future<StoreSettingsTableData?> load() {
     return (select(storeSettingsTable)..limit(1)).getSingleOrNull();

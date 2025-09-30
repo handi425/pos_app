@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router.dart';
+import '../../../core/constants/app_sizes.dart';
 import '../../../core/utils/money_formatter.dart';
 import '../../../domain/entities/report_summaries.dart';
 import '../application/dashboard_providers.dart';
@@ -33,7 +34,7 @@ class DashboardPage extends ConsumerWidget {
           await ref.read(dashboardSummaryProvider.future);
         },
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: AppSpacing.page,
           children: [
             summaryAsync.when(
               data: (data) => _SummarySection(summary: data),
@@ -41,9 +42,9 @@ class DashboardPage extends ConsumerWidget {
                   _ErrorPlaceholder(message: error.toString()),
               loading: () => const _SummarySkeleton(),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.lg),
             _QuickMenuGrid(onNavigate: (route) => context.go(route)),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.lg),
             dailyAsync.when(
               data: (rows) => _ReportHighlights(reports: rows),
               loading: () => const _ReportsSkeleton(),
@@ -64,48 +65,50 @@ class _SummarySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     final cards = [
       _SummaryCardData(
         title: 'Omzet Hari Ini',
         value: MoneyFormatter.format(summary.totalSalesToday),
         icon: Icons.shopping_bag_outlined,
-        color: Colors.teal,
+        color: scheme.primary,
       ),
       _SummaryCardData(
         title: 'Transaksi',
         value: '${summary.transactionsToday}',
         icon: Icons.receipt_long_outlined,
-        color: Colors.blue,
+        color: scheme.secondary,
       ),
       _SummaryCardData(
         title: 'Kas Masuk',
         value: MoneyFormatter.format(summary.cashInToday),
         icon: Icons.trending_up,
-        color: Colors.green,
+        color: scheme.tertiary,
       ),
       _SummaryCardData(
         title: 'Kas Keluar',
         value: MoneyFormatter.format(summary.cashOutToday),
         icon: Icons.trending_down,
-        color: Colors.redAccent,
+        color: scheme.error,
       ),
       _SummaryCardData(
         title: 'Piutang',
         value: MoneyFormatter.format(summary.outstandingDebt),
         icon: Icons.account_balance_wallet_outlined,
-        color: Colors.orange,
+        color: scheme.primaryContainer,
       ),
       _SummaryCardData(
         title: 'Stok Menipis',
         value: '${summary.lowStockCount}',
         icon: Icons.inventory_2_outlined,
-        color: Colors.purple,
+        color: scheme.secondaryContainer,
       ),
     ];
 
     return Wrap(
-      spacing: 16,
-      runSpacing: 16,
+      spacing: AppSpacing.md,
+      runSpacing: AppSpacing.md,
       children: cards.map((item) => _SummaryCard(data: item)).toList(),
     );
   }
@@ -135,28 +138,33 @@ class _SummaryCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ConstrainedBox(
-      constraints: const BoxConstraints(minWidth: 160, maxWidth: 240),
+      constraints: const BoxConstraints(minWidth: 160, maxWidth: 200),
       child: Card(
-        elevation: 2,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: AppSpacing.card,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CircleAvatar(
-                backgroundColor: data.color.withValues(alpha: 0.15),
+                radius: 20,
+                backgroundColor: data.color.withValues(alpha: 0.12),
                 foregroundColor: data.color,
                 child: Icon(data.icon),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm),
               Text(
                 data.value,
                 style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(height: 4),
-              Text(data.title, style: theme.textTheme.bodyMedium),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                data.title,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
             ],
           ),
         ),
@@ -215,10 +223,10 @@ class _QuickMenuGrid extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Menu Cepat', style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         Wrap(
-          spacing: 16,
-          runSpacing: 16,
+          spacing: AppSpacing.md,
+          runSpacing: AppSpacing.md,
           children: quickActions
               .map(
                 (action) => _QuickActionTile(
@@ -258,31 +266,29 @@ class _QuickActionTile extends StatelessWidget {
     final theme = Theme.of(context);
 
     return SizedBox(
-      width: 200,
+      width: 180,
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppSpacing.borderRadius,
         onTap: onTap,
         child: Ink(
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: theme.colorScheme.surfaceContainerHighest,
-            ),
+            borderRadius: AppSpacing.borderRadius,
+            border: Border.all(color: theme.colorScheme.outlineVariant),
           ),
-          padding: const EdgeInsets.all(16),
+          padding: AppSpacing.compactCard,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(action.icon, size: 28, color: theme.colorScheme.primary),
-              const SizedBox(height: 12),
+              Icon(action.icon, size: 26, color: theme.colorScheme.primary),
+              const SizedBox(height: AppSpacing.sm),
               Text(
                 action.label,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSpacing.xs),
               Text(action.description, style: theme.textTheme.bodySmall),
             ],
           ),
@@ -323,9 +329,15 @@ class _ReportHighlights extends StatelessWidget {
                       style: theme.textTheme.labelLarge,
                     ),
                   ),
-                  title: Text(MoneyFormatter.format(report.totalAmount)),
+                  title: Text(
+                    MoneyFormatter.format(report.totalAmount),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   subtitle: Text(
                     'Diskon ${MoneyFormatter.format(report.totalDiscount)} - Qty ${report.totalQuantity.toStringAsFixed(0)}',
+                    style: theme.textTheme.bodySmall,
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 ),
@@ -339,9 +351,8 @@ class _ReportHighlights extends StatelessWidget {
           'Laporan 7 Hari Terakhir',
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         Card(
-          elevation: 1,
           child: ListView.separated(
             itemCount: items.length,
             shrinkWrap: true,
@@ -361,12 +372,12 @@ class _SummarySkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 16,
-      runSpacing: 16,
+      spacing: AppSpacing.md,
+      runSpacing: AppSpacing.md,
       children: List.generate(
         4,
         (index) => ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 160, maxWidth: 240),
+          constraints: const BoxConstraints(minWidth: 160, maxWidth: 220),
           child: const _SkeletonBox(height: 110),
         ),
       ),
@@ -380,12 +391,11 @@ class _ReportsSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 1,
       child: Column(
         children: List.generate(
           3,
           (index) => const Padding(
-            padding: EdgeInsets.all(16),
+            padding: AppSpacing.card,
             child: _SkeletonBox(height: 52),
           ),
         ),
@@ -402,13 +412,13 @@ class _SkeletonBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: AppSpacing.borderRadius,
       child: Container(
         height: height,
         decoration: BoxDecoration(
           color: Theme.of(
             context,
-          ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+          ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
         ),
       ),
     );
@@ -425,15 +435,22 @@ class _ErrorPlaceholder extends StatelessWidget {
     return Card(
       color: Theme.of(context).colorScheme.errorContainer,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: AppSpacing.card,
         child: Row(
           children: [
             Icon(
               Icons.warning_amber_rounded,
               color: Theme.of(context).colorScheme.error,
             ),
-            const SizedBox(width: 12),
-            Expanded(child: Text('Tidak dapat memuat ringkasan: $message')),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Text(
+                'Tidak dapat memuat ringkasan: $message',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onErrorContainer,
+                ),
+              ),
+            ),
           ],
         ),
       ),

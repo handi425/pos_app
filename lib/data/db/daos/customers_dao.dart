@@ -18,7 +18,7 @@ class CustomerWithDebt {
 @DriftAccessor(tables: [CustomersTable, DebtsTable])
 class CustomersDao extends DatabaseAccessor<PosDatabase>
     with _$CustomersDaoMixin {
-  CustomersDao(PosDatabase db) : super(db);
+  CustomersDao(super.db);
 
   Future<int> createCustomer(CustomersTableCompanion data) {
     return into(customersTable).insert(data);
