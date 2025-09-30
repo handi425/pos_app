@@ -1,19 +1,46 @@
 name: pos_app
-description: "A new Flutter project."
+description: "Offline-first POS Flutter app dengan kasbon"
 publish_to: 'none'
 version: 0.1.0
 
 environment:
   sdk: ^3.9.2
+  flutter: ^3.22.0
 
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+  go_router: ^14.2.0
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.3
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.9.0
+  drift: ^2.12.1
+  sqlite3_flutter_libs: ^0.5.24
+  path_provider: ^2.1.4
+  path: ^1.9.0
+  uuid: ^4.4.0
+  collection: ^1.18.0
+  mobile_scanner: ^5.1.3
+  csv: ^6.0.0
+  shared_preferences: ^2.3.2
+  esc_pos_utils: ^1.1.0
+  qr_flutter: ^4.1.0
+  crypto: ^3.0.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  build_runner: ^2.4.9
+  freezed: ^2.4.7
+  riverpod_generator: ^2.3.9
+  json_serializable: ^6.7.1
+  drift_dev: ^2.12.1
+  mocktail: ^1.0.3
 
 flutter:
   uses-material-design: true

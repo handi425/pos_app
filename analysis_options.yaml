@@ -1,1 +1,20 @@
 include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.gr.dart"
+    - "**/*.mocks.dart"
+    - "lib/data/db/*.drift.dart"
+
+linter:
+  rules:
+    avoid_print: true
+    prefer_relative_imports: true
+    directives_ordering: true
+    sort_constructors_first: true
