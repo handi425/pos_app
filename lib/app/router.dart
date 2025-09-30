@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,6 +16,8 @@ import '../features/sales/presentation/sales_page.dart';
 import '../features/settings/presentation/settings_page.dart';
 import 'home_shell.dart';
 
+final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
+
 enum AppRoute {
   splash('/splash'),
   onboarding('/onboarding'),
@@ -22,10 +25,10 @@ enum AppRoute {
   dashboard('/dashboard'),
   sales('/sales'),
   products('/products'),
-  customers('/customers'),
-  debts('/debts'),
   reports('/reports'),
-  settings('/settings');
+  settings('/settings'),
+  customers('/customers'),
+  debts('/debts');
 
   const AppRoute(this.path);
 
@@ -37,6 +40,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   final bootstrapState = ref.watch(appBootstrapProvider);
 
   return GoRouter(
+    navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: false,
     initialLocation: AppRoute.splash.path,
     routes: [
@@ -59,56 +63,62 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state, navigationShell) =>
             HomeShellPage(navigationShell: navigationShell),
         branches: [
-          StatefulShellBranch(routes: [
-            GoRoute(
-              path: AppRoute.dashboard.path,
-              name: AppRoute.dashboard.name,
-              builder: (context, state) => const DashboardPage(),
-            ),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(
-              path: AppRoute.sales.path,
-              name: AppRoute.sales.name,
-              builder: (context, state) => const SalesPage(),
-            ),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(
-              path: AppRoute.products.path,
-              name: AppRoute.products.name,
-              builder: (context, state) => const ProductsPage(),
-            ),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(
-              path: AppRoute.customers.path,
-              name: AppRoute.customers.name,
-              builder: (context, state) => const CustomersPage(),
-            ),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(
-              path: AppRoute.debts.path,
-              name: AppRoute.debts.name,
-              builder: (context, state) => const DebtsPage(),
-            ),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(
-              path: AppRoute.reports.path,
-              name: AppRoute.reports.name,
-              builder: (context, state) => const ReportsPage(),
-            ),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(
-              path: AppRoute.settings.path,
-              name: AppRoute.settings.name,
-              builder: (context, state) => const SettingsPage(),
-            ),
-          ]),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoute.dashboard.path,
+                name: AppRoute.dashboard.name,
+                builder: (context, state) => const DashboardPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoute.sales.path,
+                name: AppRoute.sales.name,
+                builder: (context, state) => const SalesPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoute.products.path,
+                name: AppRoute.products.name,
+                builder: (context, state) => const ProductsPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoute.reports.path,
+                name: AppRoute.reports.name,
+                builder: (context, state) => const ReportsPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoute.settings.path,
+                name: AppRoute.settings.name,
+                builder: (context, state) => const SettingsPage(),
+              ),
+            ],
+          ),
         ],
+      ),
+      GoRoute(
+        path: AppRoute.customers.path,
+        name: AppRoute.customers.name,
+        builder: (context, state) => const CustomersPage(),
+      ),
+      GoRoute(
+        path: AppRoute.debts.path,
+        name: AppRoute.debts.name,
+        builder: (context, state) => const DebtsPage(),
       ),
     ],
     redirect: (context, state) {

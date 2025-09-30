@@ -19,7 +19,9 @@ class SettingsDao extends DatabaseAccessor<PosDatabase>
     if (current == null) {
       await into(storeSettingsTable).insert(data);
     } else {
-      await (update(storeSettingsTable)..where((tbl) => tbl.id.equals(current.id))).write(data);
+      await (update(
+        storeSettingsTable,
+      )..where((tbl) => tbl.id.equals(current.id))).write(data);
     }
   }
 

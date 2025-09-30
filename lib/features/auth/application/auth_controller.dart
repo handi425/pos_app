@@ -5,10 +5,11 @@ import '../../../data/db/database_provider.dart';
 import '../../../data/db/pos_database.dart';
 import '../../../data/db/tables.dart';
 
-final authControllerProvider =
-    StateNotifierProvider<AuthController, AuthState>((ref) {
-  return AuthController(ref);
-});
+final authControllerProvider = StateNotifierProvider<AuthController, AuthState>(
+  (ref) {
+    return AuthController(ref);
+  },
+);
 
 enum AuthStatus { unknown, onboardingRequired, unauthenticated, authenticated }
 
@@ -52,9 +53,15 @@ class AuthController extends StateNotifier<AuthState> {
   Future<void> loadInitialState() async {
     final users = await _db.usersDao.getActiveUsers();
     if (users.isEmpty) {
-      state = const AuthState(status: AuthStatus.onboardingRequired, hasUsers: false);
+      state = const AuthState(
+        status: AuthStatus.onboardingRequired,
+        hasUsers: false,
+      );
     } else {
-      state = const AuthState(status: AuthStatus.unauthenticated, hasUsers: true);
+      state = const AuthState(
+        status: AuthStatus.unauthenticated,
+        hasUsers: true,
+      );
     }
   }
 
@@ -65,11 +72,7 @@ class AuthController extends StateNotifier<AuthState> {
   }) async {
     final hashed = PinHasher.hash(pin);
     await _db.usersDao.createUser(
-      UsersTableCompanion.insert(
-        name: name,
-        role: role,
-        pinHash: hashed,
-      ),
+      UsersTableCompanion.insert(name: name, role: role, pinHash: hashed),
     );
     state = const AuthState(status: AuthStatus.unauthenticated, hasUsers: true);
   }

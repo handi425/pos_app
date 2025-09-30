@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'value_enums.dart';
 import 'app_user.dart';
+import 'value_enums.dart';
 
 part 'cash_ledger_entry.freezed.dart';
 part 'cash_ledger_entry.g.dart';

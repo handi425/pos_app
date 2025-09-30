@@ -15,11 +15,13 @@ class ReportRepositoryImpl implements ReportRepository {
   @override
   Future<DashboardSummary> dashboardSummary(DateTime date) async {
     final start = DateTime(date.year, date.month, date.day);
-    final end = start.add(const Duration(days: 1)).subtract(const Duration(milliseconds: 1));
+    final end = start
+        .add(const Duration(days: 1))
+        .subtract(const Duration(milliseconds: 1));
 
-    final salesRows = await (_db.select(_db.salesTable)
-          ..where((tbl) => tbl.datetime.isBetweenValues(start, end)))
-        .get();
+    final salesRows = await (_db.select(
+      _db.salesTable,
+    )..where((tbl) => tbl.datetime.isBetweenValues(start, end))).get();
     final salesTotal = salesRows.fold<int>(0, (sum, row) => sum + row.total);
 
     final cashFlow = await _db.reportsDao.cashFlowSummary(start, end);
@@ -37,7 +39,10 @@ class ReportRepositoryImpl implements ReportRepository {
   }
 
   @override
-  Future<SalesReportAggregate> salesSummary(DateTime start, DateTime end) async {
+  Future<SalesReportAggregate> salesSummary(
+    DateTime start,
+    DateTime end,
+  ) async {
     final result = await _db.reportsDao.salesSummary(start, end);
     return SalesReportAggregate(
       totalAmount: result.totalAmount,
@@ -49,7 +54,20 @@ class ReportRepositoryImpl implements ReportRepository {
 
   @override
   Future<List<DailySalesReport>> dailySales(DateTime start, DateTime end) {
-    return _db.reportsDao.dailySales(start, end).then((rows) => rows.map((row) => DailySalesReport(date: row.date, totalAmount: row.totalAmount, totalDiscount: row.totalDiscount, totalQuantity: row.totalQuantity)).toList());
+    return _db.reportsDao
+        .dailySales(start, end)
+        .then(
+          (rows) => rows
+              .map(
+                (row) => DailySalesReport(
+                  date: row.date,
+                  totalAmount: row.totalAmount,
+                  totalDiscount: row.totalDiscount,
+                  totalQuantity: row.totalQuantity,
+                ),
+              )
+              .toList(),
+        );
   }
 
   @override
@@ -62,15 +80,18 @@ class ReportRepositoryImpl implements ReportRepository {
   }
 
   @override
-  Future<CashFlowAggregate> cashFlowSummary(DateTime start, DateTime end) async {
+  Future<CashFlowAggregate> cashFlowSummary(
+    DateTime start,
+    DateTime end,
+  ) async {
     final result = await _db.reportsDao.cashFlowSummary(start, end);
     return CashFlowAggregate(cashIn: result.cashIn, cashOut: result.cashOut);
   }
 
   Future<int> _overallOutstandingDebt() async {
-    final rows = await (_db.select(_db.debtsTable)
-          ..where((tbl) => tbl.status.equalsValue(db.DebtStatus.open)))
-        .get();
+    final rows = await (_db.select(
+      _db.debtsTable,
+    )..where((tbl) => tbl.status.equalsValue(db.DebtStatus.open))).get();
     return rows.fold<int>(0, (sum, row) => sum + row.remaining);
   }
 }
@@ -79,6 +100,3 @@ final reportRepositoryProvider = Provider<ReportRepository>((ref) {
   final db = ref.watch(posDatabaseProvider);
   return ReportRepositoryImpl(db);
 });
-
-
-

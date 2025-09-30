@@ -30,7 +30,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       return;
     }
     setState(() => _isLoading = true);
-    await ref.read(authControllerProvider.notifier).completeOnboarding(
+    await ref
+        .read(authControllerProvider.notifier)
+        .completeOnboarding(
           name: _nameController.text.trim(),
           pin: _pinController.text.trim(),
         );
@@ -56,13 +58,14 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             children: [
               Text(
                 'Selamat datang di KasPOS',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 12),
-              const Text('Buat akun admin dan PIN untuk mulai menggunakan aplikasi.'),
+              const Text(
+                'Buat akun admin dan PIN untuk mulai menggunakan aplikasi.',
+              ),
               SizedBox(height: spacing),
               TextFormField(
                 controller: _nameController,

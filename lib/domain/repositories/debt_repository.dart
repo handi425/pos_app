@@ -12,4 +12,3 @@ abstract class DebtRepository {
   });
   Future<List<DebtPayment>> paymentsForDebt(int debtId);
 }
-

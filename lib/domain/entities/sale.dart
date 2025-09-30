@@ -1,9 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'app_user.dart';
 import 'customer.dart';
 import 'sale_item.dart';
 import 'value_enums.dart';
-import 'app_user.dart';
 
 part 'sale.freezed.dart';
 part 'sale.g.dart';

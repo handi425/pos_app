@@ -13,7 +13,10 @@ class CashLedgerDao extends DatabaseAccessor<PosDatabase>
   Stream<List<CashLedgerTableData>> watchRange(DateTime start, DateTime end) {
     return (select(cashLedgerTable)
           ..where((tbl) => tbl.datetime.isBetweenValues(start, end))
-          ..orderBy([(tbl) => OrderingTerm(expression: tbl.datetime, mode: OrderingMode.desc)]))
+          ..orderBy([
+            (tbl) =>
+                OrderingTerm(expression: tbl.datetime, mode: OrderingMode.desc),
+          ]))
         .watch();
   }
 

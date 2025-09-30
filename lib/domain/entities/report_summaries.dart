@@ -49,10 +49,8 @@ class DailySalesReport with _$DailySalesReport {
 
 @freezed
 class CashFlowAggregate with _$CashFlowAggregate {
-  const factory CashFlowAggregate({
-    required int cashIn,
-    required int cashOut,
-  }) = _CashFlowAggregate;
+  const factory CashFlowAggregate({required int cashIn, required int cashOut}) =
+      _CashFlowAggregate;
 
   factory CashFlowAggregate.fromJson(Map<String, dynamic> json) =>
       _$CashFlowAggregateFromJson(json);
@@ -82,9 +80,7 @@ class CustomerDebtSummary with _$CustomerDebtSummary {
 
 @freezed
 class LowStockAlert with _$LowStockAlert {
-  const factory LowStockAlert({
-    required Product product,
-  }) = _LowStockAlert;
+  const factory LowStockAlert({required Product product}) = _LowStockAlert;
 
   factory LowStockAlert.fromJson(Map<String, dynamic> json) =>
       _$LowStockAlertFromJson(json);

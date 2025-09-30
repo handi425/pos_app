@@ -11,4 +11,3 @@ abstract class AuthRepository {
   Future<void> deactivateUser(int id);
   Stream<List<AppUser>> watchUsers();
 }
-

@@ -62,14 +62,14 @@ class PosDatabase extends _$PosDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        onCreate: (Migrator m) async {
-          await m.createAll();
-                    await _seedInitialData();
-        },
-        onUpgrade: (Migrator m, int from, int to) async {
-          // Reserved for future schema upgrades.
-        },
-      );
+    onCreate: (Migrator m) async {
+      await m.createAll();
+      await _seedInitialData();
+    },
+    onUpgrade: (Migrator m, int from, int to) async {
+      // Reserved for future schema upgrades.
+    },
+  );
 
   Future<void> _seedInitialData() async {
     await into(storeSettingsTable).insert(
@@ -82,8 +82,9 @@ class PosDatabase extends _$PosDatabase {
       mode: InsertMode.insertOrIgnore,
     );
 
-    final hasCategory =
-        await (select(categoriesTable)..limit(1)).get().then((value) => value.isNotEmpty);
+    final hasCategory = await (select(
+      categoriesTable,
+    )..limit(1)).get().then((value) => value.isNotEmpty);
     if (!hasCategory) {
       await batch((batch) {
         batch.insertAll(categoriesTable, [
@@ -94,7 +95,9 @@ class PosDatabase extends _$PosDatabase {
       });
     }
 
-    final hasAdmin = await (select(usersTable)..limit(1)).get().then((value) => value.isNotEmpty);
+    final hasAdmin = await (select(
+      usersTable,
+    )..limit(1)).get().then((value) => value.isNotEmpty);
     if (!hasAdmin) {
       await into(usersTable).insert(
         UsersTableCompanion.insert(
@@ -106,5 +109,3 @@ class PosDatabase extends _$PosDatabase {
     }
   }
 }
-
-

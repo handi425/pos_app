@@ -7,7 +7,3 @@ abstract class ReportRepository {
   Future<DebtReportAggregate> debtSummary(DateTime start, DateTime end);
   Future<CashFlowAggregate> cashFlowSummary(DateTime start, DateTime end);
 }
-
-
-
-

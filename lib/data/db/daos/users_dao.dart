@@ -25,7 +25,9 @@ class UsersDao extends DatabaseAccessor<PosDatabase> with _$UsersDaoMixin {
 
   Future<UsersTableData?> findByPinHash(String pinHash) {
     return (select(usersTable)
-          ..where((tbl) => tbl.pinHash.equals(pinHash) & tbl.isActive.equals(true))
+          ..where(
+            (tbl) => tbl.pinHash.equals(pinHash) & tbl.isActive.equals(true),
+          )
           ..limit(1))
         .getSingleOrNull();
   }
@@ -37,14 +39,24 @@ class UsersDao extends DatabaseAccessor<PosDatabase> with _$UsersDaoMixin {
   Stream<List<UsersTableData>> watchAll() {
     return (select(usersTable)
           ..where((tbl) => tbl.isActive.equals(true))
-          ..orderBy([(tbl) => OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc)]))
+          ..orderBy([
+            (tbl) => OrderingTerm(
+              expression: tbl.createdAt,
+              mode: OrderingMode.desc,
+            ),
+          ]))
         .watch();
   }
 
   Future<List<UsersTableData>> getActiveUsers() {
     return (select(usersTable)
           ..where((tbl) => tbl.isActive.equals(true))
-          ..orderBy([(tbl) => OrderingTerm(expression: tbl.createdAt, mode: OrderingMode.desc)]))
+          ..orderBy([
+            (tbl) => OrderingTerm(
+              expression: tbl.createdAt,
+              mode: OrderingMode.desc,
+            ),
+          ]))
         .get();
   }
 }

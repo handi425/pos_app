@@ -5,10 +5,7 @@ part 'category.g.dart';
 
 @freezed
 class Category with _$Category {
-  const factory Category({
-    required int id,
-    required String name,
-  }) = _Category;
+  const factory Category({required int id, required String name}) = _Category;
 
   factory Category.fromJson(Map<String, dynamic> json) =>
       _$CategoryFromJson(json);

@@ -11,14 +11,17 @@ class CategoriesDao extends DatabaseAccessor<PosDatabase>
   CategoriesDao(PosDatabase db) : super(db);
 
   Future<int> create(String name) {
-    return into(categoriesTable).insert(
-      CategoriesTableCompanion.insert(name: name),
-    );
+    return into(
+      categoriesTable,
+    ).insert(CategoriesTableCompanion.insert(name: name));
   }
 
   Future<void> updateCategory(int id, String name) {
     return (update(categoriesTable)..where((tbl) => tbl.id.equals(id))).write(
-      CategoriesTableCompanion(name: Value(name), updatedAt: Value(DateTime.now())),
+      CategoriesTableCompanion(
+        name: Value(name),
+        updatedAt: Value(DateTime.now()),
+      ),
     );
   }
 
@@ -27,14 +30,14 @@ class CategoriesDao extends DatabaseAccessor<PosDatabase>
   }
 
   Stream<List<CategoriesTableData>> watchAll() {
-    return (select(categoriesTable)
-          ..orderBy([(tbl) => OrderingTerm(expression: tbl.name)]))
-        .watch();
+    return (select(
+      categoriesTable,
+    )..orderBy([(tbl) => OrderingTerm(expression: tbl.name)])).watch();
   }
 
   Future<List<CategoriesTableData>> getAll() {
-    return (select(categoriesTable)
-          ..orderBy([(tbl) => OrderingTerm(expression: tbl.name)]))
-        .get();
+    return (select(
+      categoriesTable,
+    )..orderBy([(tbl) => OrderingTerm(expression: tbl.name)])).get();
   }
 }

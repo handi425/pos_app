@@ -35,41 +35,39 @@ class CustomersDao extends DatabaseAccessor<PosDatabase>
   }
 
   Stream<List<CustomersTableData>> watchAll() {
-    return (select(customersTable)
-          ..orderBy([(tbl) => OrderingTerm(expression: tbl.name)]))
-        .watch();
+    return (select(
+      customersTable,
+    )..orderBy([(tbl) => OrderingTerm(expression: tbl.name)])).watch();
   }
 
   Stream<List<CustomerWithDebt>> watchWithDebtSummary() {
     final debtAlias = alias(debtsTable, 'd');
     final remainingSum = debtAlias.remaining.sum();
 
-    final query = select(customersTable).join([
-      leftOuterJoin(
-        debtAlias,
-        debtAlias.customerId.equalsExp(customersTable.id) &
-            debtAlias.status.equalsValue(DebtStatus.open),
-      ),
-    ])
-      ..addColumns([remainingSum])
-      ..groupBy([customersTable.id])
-      ..orderBy([
-        OrderingTerm(expression: customersTable.name),
-      ]);
+    final query =
+        select(customersTable).join([
+            leftOuterJoin(
+              debtAlias,
+              debtAlias.customerId.equalsExp(customersTable.id) &
+                  debtAlias.status.equalsValue(DebtStatus.open),
+            ),
+          ])
+          ..addColumns([remainingSum])
+          ..groupBy([customersTable.id])
+          ..orderBy([OrderingTerm(expression: customersTable.name)]);
 
     return query.watch().map((rows) {
       return rows.map((row) {
         final customer = row.readTable(customersTable);
         final remaining = row.read(remainingSum) ?? 0;
-        return CustomerWithDebt(
-          customer: customer,
-          totalRemaining: remaining,
-        );
+        return CustomerWithDebt(customer: customer, totalRemaining: remaining);
       }).toList();
     });
   }
 
   Future<CustomersTableData?> getById(int id) {
-    return (select(customersTable)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+    return (select(
+      customersTable,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
   }
 }

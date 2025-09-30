@@ -5,8 +5,8 @@ import '../../domain/entities/sale.dart';
 import '../../domain/entities/sale_draft.dart';
 import '../../domain/entities/sale_item.dart';
 import '../../domain/repositories/sales_repository.dart';
-import '../db/database_provider.dart';
 import '../db/daos/sales_dao.dart';
+import '../db/database_provider.dart';
 import '../db/pos_database.dart';
 import 'mappers.dart';
 
@@ -16,7 +16,10 @@ class SalesRepositoryImpl implements SalesRepository {
   final PosDatabase _db;
 
   @override
-  Future<Sale> createSale({required SaleDraft draft, required int userId}) async {
+  Future<Sale> createSale({
+    required SaleDraft draft,
+    required int userId,
+  }) async {
     final now = DateTime.now();
     final saleCompanion = SalesTableCompanion.insert(
       datetime: now,
@@ -46,9 +49,9 @@ class SalesRepositoryImpl implements SalesRepository {
 
   @override
   Future<List<Sale>> salesBetween(DateTime start, DateTime end) async {
-    final rows = await (_db.select(_db.salesTable)
-          ..where((tbl) => tbl.datetime.isBetweenValues(start, end)))
-        .get();
+    final rows = await (_db.select(
+      _db.salesTable,
+    )..where((tbl) => tbl.datetime.isBetweenValues(start, end))).get();
     final sales = <Sale>[];
     for (final row in rows) {
       sales.add(await _loadSaleById(row.id));
@@ -134,8 +137,3 @@ final salesRepositoryProvider = Provider<SalesRepository>((ref) {
   final db = ref.watch(posDatabaseProvider);
   return SalesRepositoryImpl(db);
 });
-
-
-
-
-

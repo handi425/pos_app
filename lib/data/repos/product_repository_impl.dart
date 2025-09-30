@@ -31,7 +31,8 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<void> deactivateProduct(int id) => _db.productsDao.deactivateProduct(id);
+  Future<void> deactivateProduct(int id) =>
+      _db.productsDao.deactivateProduct(id);
 
   @override
   Future<Product?> findBySkuOrBarcode(String query) async {
@@ -49,12 +50,7 @@ class ProductRepositoryImpl implements ProductRepository {
     final categories = await _db.categoriesDao.getAll();
     final categoryMap = {for (final c in categories) c.id: c};
     return products
-        .map(
-          (item) => mapProduct(
-            item,
-            category: categoryMap[item.categoryId],
-          ),
-        )
+        .map((item) => mapProduct(item, category: categoryMap[item.categoryId]))
         .toList();
   }
 
@@ -64,7 +60,10 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<Product> updateProduct(Product product) async {
-    await _db.productsDao.updateProduct(product.id, _toUpdateCompanion(product));
+    await _db.productsDao.updateProduct(
+      product.id,
+      _toUpdateCompanion(product),
+    );
     final updated = await _db.productsDao.getById(product.id);
     final category = await _db.productsDao.getCategory(updated.categoryId);
     return mapProduct(updated, category: category);
@@ -72,16 +71,16 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Stream<List<Category>> watchCategories() {
-    return _db.categoriesDao.watchAll().map((rows) => rows.map(mapCategory).toList());
+    return _db.categoriesDao.watchAll().map(
+      (rows) => rows.map(mapCategory).toList(),
+    );
   }
 
   @override
   Stream<List<Product>> watchProducts() {
     return _db.productsDao.watchAll().map(
       (rows) => rows
-          .map(
-            (row) => mapProduct(row.product, category: row.category),
-          )
+          .map((row) => mapProduct(row.product, category: row.category))
           .toList(),
     );
   }
@@ -140,6 +139,3 @@ final productRepositoryProvider = Provider<ProductRepository>((ref) {
   final db = ref.watch(posDatabaseProvider);
   return ProductRepositoryImpl(db);
 });
-
-
-

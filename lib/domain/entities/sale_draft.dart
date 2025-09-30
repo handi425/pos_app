@@ -42,10 +42,11 @@ class SaleDraft with _$SaleDraft {
   const SaleDraft._();
 
   int get itemsGross => items.fold(0, (sum, item) => sum + item.lineBase);
-  int get itemDiscountTotal => items.fold(0, (sum, item) => sum + item.lineDiscount);
+  int get itemDiscountTotal =>
+      items.fold(0, (sum, item) => sum + item.lineDiscount);
   int get subtotal => itemsGross - itemDiscountTotal;
   int get discountTotal => itemDiscountTotal + transactionDiscount;
-  int get grandTotal => (subtotal - transactionDiscount + tax).clamp(0, subtotal + tax);
+  int get grandTotal =>
+      (subtotal - transactionDiscount + tax).clamp(0, subtotal + tax);
   int get change => (paid - grandTotal).clamp(0, paid);
 }
-

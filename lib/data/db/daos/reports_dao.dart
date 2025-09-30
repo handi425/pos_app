@@ -34,20 +34,14 @@ class DailySalesSummary {
 }
 
 class DebtReportSummary {
-  const DebtReportSummary({
-    required this.newDebts,
-    required this.payments,
-  });
+  const DebtReportSummary({required this.newDebts, required this.payments});
 
   final int newDebts;
   final int payments;
 }
 
 class CashFlowSummary {
-  const CashFlowSummary({
-    required this.cashIn,
-    required this.cashOut,
-  });
+  const CashFlowSummary({required this.cashIn, required this.cashOut});
 
   final int cashIn;
   final int cashOut;
@@ -96,7 +90,10 @@ class ReportsDao extends DatabaseAccessor<PosDatabase> with _$ReportsDaoMixin {
     );
   }
 
-  Future<List<DailySalesSummary>> dailySales(DateTime start, DateTime end) async {
+  Future<List<DailySalesSummary>> dailySales(
+    DateTime start,
+    DateTime end,
+  ) async {
     const sql = '''
       SELECT
         DATE(s.datetime) AS sale_date,
@@ -129,15 +126,17 @@ class ReportsDao extends DatabaseAccessor<PosDatabase> with _$ReportsDaoMixin {
   }
 
   Future<DebtReportSummary> debtSummary(DateTime start, DateTime end) async {
-    final debtsTotal = await (selectOnly(debtsTable)
-          ..where(debtsTable.createdAt.isBetweenValues(start, end))
-          ..addColumns([debtsTable.principal.sum()]))
-        .getSingleOrNull();
+    final debtsTotal =
+        await (selectOnly(debtsTable)
+              ..where(debtsTable.createdAt.isBetweenValues(start, end))
+              ..addColumns([debtsTable.principal.sum()]))
+            .getSingleOrNull();
 
-    final paymentsTotal = await (selectOnly(debtPaymentsTable)
-          ..where(debtPaymentsTable.datetime.isBetweenValues(start, end))
-          ..addColumns([debtPaymentsTable.amount.sum()]))
-        .getSingleOrNull();
+    final paymentsTotal =
+        await (selectOnly(debtPaymentsTable)
+              ..where(debtPaymentsTable.datetime.isBetweenValues(start, end))
+              ..addColumns([debtPaymentsTable.amount.sum()]))
+            .getSingleOrNull();
 
     return DebtReportSummary(
       newDebts: debtsTotal?.read(debtsTable.principal.sum()) ?? 0,
@@ -146,17 +145,23 @@ class ReportsDao extends DatabaseAccessor<PosDatabase> with _$ReportsDaoMixin {
   }
 
   Future<CashFlowSummary> cashFlowSummary(DateTime start, DateTime end) async {
-    final cashIn = await (selectOnly(cashLedgerTable)
-          ..where(cashLedgerTable.datetime.isBetweenValues(start, end) &
-              cashLedgerTable.type.equalsValue(CashLedgerType.inFlow))
-          ..addColumns([cashLedgerTable.amount.sum()]))
-        .getSingleOrNull();
+    final cashIn =
+        await (selectOnly(cashLedgerTable)
+              ..where(
+                cashLedgerTable.datetime.isBetweenValues(start, end) &
+                    cashLedgerTable.type.equalsValue(CashLedgerType.inFlow),
+              )
+              ..addColumns([cashLedgerTable.amount.sum()]))
+            .getSingleOrNull();
 
-    final cashOut = await (selectOnly(cashLedgerTable)
-          ..where(cashLedgerTable.datetime.isBetweenValues(start, end) &
-              cashLedgerTable.type.equalsValue(CashLedgerType.outFlow))
-          ..addColumns([cashLedgerTable.amount.sum()]))
-        .getSingleOrNull();
+    final cashOut =
+        await (selectOnly(cashLedgerTable)
+              ..where(
+                cashLedgerTable.datetime.isBetweenValues(start, end) &
+                    cashLedgerTable.type.equalsValue(CashLedgerType.outFlow),
+              )
+              ..addColumns([cashLedgerTable.amount.sum()]))
+            .getSingleOrNull();
 
     return CashFlowSummary(
       cashIn: cashIn?.read(cashLedgerTable.amount.sum()) ?? 0,

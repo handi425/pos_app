@@ -49,9 +49,9 @@ class SettingsRepositoryImpl implements SettingsRepository {
 
   @override
   Stream<StoreSettings?> watchSettings() {
-    return _db.settingsDao
-        .watchSettings()
-        .map((data) => data != null ? mapStoreSettings(data) : null);
+    return _db.settingsDao.watchSettings().map(
+      (data) => data != null ? mapStoreSettings(data) : null,
+    );
   }
 }
 
@@ -59,5 +59,3 @@ final settingsRepositoryProvider = Provider<SettingsRepository>((ref) {
   final db = ref.watch(posDatabaseProvider);
   return SettingsRepositoryImpl(db);
 });
-
-

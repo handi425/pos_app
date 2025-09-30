@@ -57,5 +57,3 @@ final debtRepositoryProvider = Provider<DebtRepository>((ref) {
   final db = ref.watch(posDatabaseProvider);
   return DebtRepositoryImpl(db);
 });
-
-

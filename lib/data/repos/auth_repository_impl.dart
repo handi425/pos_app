@@ -59,6 +59,3 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final db = ref.watch(posDatabaseProvider);
   return AuthRepositoryImpl(db);
 });
-
-
-

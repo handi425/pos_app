@@ -15,7 +15,9 @@ class CustomerRepositoryImpl implements CustomerRepository {
 
   @override
   Future<Customer> createCustomer(Customer customer) async {
-    final id = await _db.customersDao.createCustomer(_toInsertCompanion(customer));
+    final id = await _db.customersDao.createCustomer(
+      _toInsertCompanion(customer),
+    );
     return customer.copyWith(id: id);
   }
 
@@ -24,12 +26,17 @@ class CustomerRepositoryImpl implements CustomerRepository {
 
   @override
   Future<void> updateCustomer(Customer customer) {
-    return _db.customersDao.updateCustomer(customer.id, _toUpdateCompanion(customer));
+    return _db.customersDao.updateCustomer(
+      customer.id,
+      _toUpdateCompanion(customer),
+    );
   }
 
   @override
   Stream<List<Customer>> watchCustomers() {
-    return _db.customersDao.watchAll().map((rows) => rows.map(mapCustomer).toList());
+    return _db.customersDao.watchAll().map(
+      (rows) => rows.map(mapCustomer).toList(),
+    );
   }
 
   @override
@@ -68,5 +75,3 @@ final customerRepositoryProvider = Provider<CustomerRepository>((ref) {
   final db = ref.watch(posDatabaseProvider);
   return CustomerRepositoryImpl(db);
 });
-
-

@@ -33,9 +33,9 @@ class _PinLoginPageState extends ConsumerState<PinLoginPage> {
     setState(() => _isLoading = false);
 
     if (!success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('PIN tidak cocok')), 
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('PIN tidak cocok')));
     }
   }
 

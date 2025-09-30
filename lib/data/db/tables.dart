@@ -62,9 +62,11 @@ class UsersTable extends Table {
 class SalesTable extends Table {
   IntColumn get id => integer().autoIncrement()();
   DateTimeColumn get datetime => dateTime()();
-  IntColumn get customerId => integer()
-      .nullable()
-      .references(CustomersTable, #id, onDelete: KeyAction.setNull)();
+  IntColumn get customerId => integer().nullable().references(
+    CustomersTable,
+    #id,
+    onDelete: KeyAction.setNull,
+  )();
   IntColumn get userId => integer().references(UsersTable, #id)();
   IntColumn get subtotal => integer()();
   IntColumn get discount => integer().withDefault(const Constant(0))();
@@ -144,5 +146,3 @@ class StoreSettingsTable extends Table {
   BoolColumn get darkMode => boolean().withDefault(const Constant(false))();
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 }
-
-

@@ -46,13 +46,16 @@ class ProductsDao extends DatabaseAccessor<PosDatabase>
   }
 
   Stream<List<ProductWithCategory>> watchAll() {
-    final query = select(productsTable).join([
-      innerJoin(categoriesTable, categoriesTable.id.equalsExp(productsTable.categoryId)),
-    ])
-      ..orderBy([
-        OrderingTerm(expression: categoriesTable.name),
-        OrderingTerm(expression: productsTable.name),
-      ]);
+    final query =
+        select(productsTable).join([
+          innerJoin(
+            categoriesTable,
+            categoriesTable.id.equalsExp(productsTable.categoryId),
+          ),
+        ])..orderBy([
+          OrderingTerm(expression: categoriesTable.name),
+          OrderingTerm(expression: productsTable.name),
+        ]);
 
     return query.watch().map((rows) {
       return rows
@@ -67,9 +70,9 @@ class ProductsDao extends DatabaseAccessor<PosDatabase>
   }
 
   Future<List<ProductStockBalance>> stockBalances() async {
-    final results = await (select(productsTable)
-          ..orderBy([(tbl) => OrderingTerm(expression: tbl.name)]))
-        .get();
+    final results = await (select(
+      productsTable,
+    )..orderBy([(tbl) => OrderingTerm(expression: tbl.name)])).get();
 
     return results
         .map(
@@ -95,7 +98,9 @@ class ProductsDao extends DatabaseAccessor<PosDatabase>
       final product = await getById(productId);
       final newStock = product.stock + delta;
 
-      await (update(productsTable)..where((tbl) => tbl.id.equals(productId))).write(
+      await (update(
+        productsTable,
+      )..where((tbl) => tbl.id.equals(productId))).write(
         ProductsTableCompanion(
           stock: Value(newStock),
           updatedAt: Value(DateTime.now()),
@@ -119,7 +124,8 @@ class ProductsDao extends DatabaseAccessor<PosDatabase>
   Future<List<ProductsTableData>> lowStockProducts() {
     final query = select(productsTable)
       ..where(
-        (tbl) => tbl.isActive.equals(true) &
+        (tbl) =>
+            tbl.isActive.equals(true) &
             tbl.stock.isSmallerOrEqual(tbl.lowStockThreshold) &
             tbl.lowStockThreshold.isBiggerThanValue(0.0),
       )
@@ -133,17 +139,24 @@ class ProductsDao extends DatabaseAccessor<PosDatabase>
     if (normalized.isEmpty) {
       return Future.value(null);
     }
-    final condition = productsTable.sku.equals(normalized) |
+    final condition =
+        productsTable.sku.equals(normalized) |
         productsTable.barcode.equals(normalized);
-    return (select(productsTable)..where((tbl) => condition)..limit(1))
+    return (select(productsTable)
+          ..where((tbl) => condition)
+          ..limit(1))
         .getSingleOrNull();
   }
 
   Future<ProductsTableData> getById(int id) {
-    return (select(productsTable)..where((tbl) => tbl.id.equals(id))).getSingle();
+    return (select(
+      productsTable,
+    )..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 
   Future<CategoriesTableData> getCategory(int id) {
-    return (select(categoriesTable)..where((tbl) => tbl.id.equals(id))).getSingle();
+    return (select(
+      categoriesTable,
+    )..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 }

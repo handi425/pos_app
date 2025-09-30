@@ -22,10 +22,7 @@ class SaleItemInput {
 }
 
 class SaleInsertResult {
-  const SaleInsertResult({
-    required this.saleId,
-    this.debtId,
-  });
+  const SaleInsertResult({required this.saleId, this.debtId});
 
   final int saleId;
   final int? debtId;
@@ -64,14 +61,14 @@ class SalesDao extends DatabaseAccessor<PosDatabase> with _$SalesDaoMixin {
           ),
         );
 
-        final product = await (select(productsTable)
-              ..where((tbl) => tbl.id.equals(item.productId)))
-            .getSingle();
+        final product = await (select(
+          productsTable,
+        )..where((tbl) => tbl.id.equals(item.productId))).getSingle();
 
         final updatedStock = product.stock - item.qty;
-        await (update(productsTable)
-              ..where((tbl) => tbl.id.equals(item.productId)))
-            .write(
+        await (update(
+          productsTable,
+        )..where((tbl) => tbl.id.equals(item.productId))).write(
           ProductsTableCompanion(
             stock: Value(updatedStock),
             updatedAt: Value(DateTime.now()),
@@ -98,16 +95,23 @@ class SalesDao extends DatabaseAccessor<PosDatabase> with _$SalesDaoMixin {
             amount: sale.paid.value,
             refType: CashLedgerRefType.sale,
             refId: Value(saleId),
-            note: Value(sale.notes.present ? sale.notes.value : 'Penjualan kasir'),
-            datetime: sale.datetime.present ? sale.datetime.value : DateTime.now(),
+            note: Value(
+              sale.notes.present ? sale.notes.value : 'Penjualan kasir',
+            ),
+            datetime: sale.datetime.present
+                ? sale.datetime.value
+                : DateTime.now(),
             userId: userId,
           ),
         );
       }
 
       int? debtId;
-      if (sale.isCredit.present && sale.isCredit.value && sale.customerId.present) {
-        final creditAmount = sale.total.value - (sale.paid.present ? sale.paid.value : 0);
+      if (sale.isCredit.present &&
+          sale.isCredit.value &&
+          sale.customerId.present) {
+        final creditAmount =
+            sale.total.value - (sale.paid.present ? sale.paid.value : 0);
         debtId = await into(debtsTable).insert(
           DebtsTableCompanion.insert(
             customerId: sale.customerId.value!,
@@ -125,17 +129,21 @@ class SalesDao extends DatabaseAccessor<PosDatabase> with _$SalesDaoMixin {
 
   Stream<List<SalesTableData>> watchRecentSales({int limit = 20}) {
     final query = (select(salesTable)
-          ..orderBy([(tbl) => OrderingTerm(expression: tbl.datetime, mode: OrderingMode.desc)])
-          ..limit(limit));
+      ..orderBy([
+        (tbl) =>
+            OrderingTerm(expression: tbl.datetime, mode: OrderingMode.desc),
+      ])
+      ..limit(limit));
     return query.watch();
   }
 
   Future<List<SaleItemsTableData>> itemsForSale(int saleId) {
-    return (select(saleItemsTable)..where((tbl) => tbl.saleId.equals(saleId))).get();
+    return (select(
+      saleItemsTable,
+    )..where((tbl) => tbl.saleId.equals(saleId))).get();
   }
 
   Future<SalesTableData> getById(int id) {
     return (select(salesTable)..where((tbl) => tbl.id.equals(id))).getSingle();
   }
 }
-

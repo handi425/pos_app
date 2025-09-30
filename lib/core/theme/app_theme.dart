@@ -21,21 +21,21 @@ class AppThemeController extends StateNotifier<ThemeMode> {
 
 abstract class AppTheme {
   static ThemeData get light => ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF006D77),
-          brightness: Brightness.light,
-        ),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        scaffoldBackgroundColor: const Color(0xFFF6F8FA),
-      );
+    useMaterial3: true,
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: const Color(0xFF006D77),
+      brightness: Brightness.light,
+    ),
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+    scaffoldBackgroundColor: const Color(0xFFF6F8FA),
+  );
 
   static ThemeData get dark => ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF83C5BE),
-          brightness: Brightness.dark,
-        ),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      );
+    useMaterial3: true,
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: const Color(0xFF83C5BE),
+      brightness: Brightness.dark,
+    ),
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+  );
 }

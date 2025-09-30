@@ -32,21 +32,21 @@ Product mapProduct(ProductsTableData data, {CategoriesTableData? category}) =>
     );
 
 Customer mapCustomer(CustomersTableData data) => Customer(
-      id: data.id,
-      name: data.name,
-      phone: data.phone,
-      notes: data.notes,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
-    );
+  id: data.id,
+  name: data.name,
+  phone: data.phone,
+  notes: data.notes,
+  createdAt: data.createdAt,
+  updatedAt: data.updatedAt,
+);
 
 AppUser mapUser(UsersTableData data) => AppUser(
-      id: data.id,
-      name: data.name,
-      role: mapUserRole(data.role),
-      isActive: data.isActive,
-      createdAt: data.createdAt,
-    );
+  id: data.id,
+  name: data.name,
+  role: mapUserRole(data.role),
+  isActive: data.isActive,
+  createdAt: data.createdAt,
+);
 
 domain.PaymentMethod mapPaymentMethod(db.PaymentMethod method) {
   switch (method) {
@@ -75,8 +75,7 @@ domain.DebtStatusView mapDebtStatus(db.DebtStatus status) {
   }
 }
 
-domain.DebtPaymentMethodView mapDebtPaymentMethod(
-    db.DebtPaymentMethod method) {
+domain.DebtPaymentMethodView mapDebtPaymentMethod(db.DebtPaymentMethod method) {
   switch (method) {
     case db.DebtPaymentMethod.cash:
       return domain.DebtPaymentMethodView.cash;
@@ -86,7 +85,8 @@ domain.DebtPaymentMethodView mapDebtPaymentMethod(
 }
 
 db.DebtPaymentMethod mapDebtPaymentMethodToDb(
-    domain.DebtPaymentMethodView method) {
+  domain.DebtPaymentMethodView method,
+) {
   switch (method) {
     case domain.DebtPaymentMethodView.cash:
       return db.DebtPaymentMethod.cash;
@@ -118,15 +118,15 @@ domain.CashReferenceType mapLedgerRefType(db.CashLedgerRefType type) {
 }
 
 StoreSettings mapStoreSettings(StoreSettingsTableData data) => StoreSettings(
-      id: data.id,
-      storeName: data.storeName,
-      address: data.address,
-      phone: data.phone,
-      defaultTax: data.defaultTax,
-      printerName: data.printerName,
-      darkMode: data.darkMode,
-      updatedAt: data.updatedAt,
-    );
+  id: data.id,
+  storeName: data.storeName,
+  address: data.address,
+  phone: data.phone,
+  defaultTax: data.defaultTax,
+  printerName: data.printerName,
+  darkMode: data.darkMode,
+  updatedAt: data.updatedAt,
+);
 
 AppUserRole mapUserRole(db.UserRole role) {
   switch (role) {
@@ -146,17 +146,19 @@ db.UserRole mapUserRoleToDb(AppUserRole role) {
   }
 }
 
-CashLedgerEntry mapLedgerEntry(CashLedgerTableData data, {UsersTableData? user}) =>
-    CashLedgerEntry(
-      id: data.id,
-      type: mapLedgerType(data.type),
-      amount: data.amount,
-      refType: mapLedgerRefType(data.refType),
-      refId: data.refId,
-      note: data.note,
-      datetime: data.datetime,
-      user: user != null ? mapUser(user) : null,
-    );
+CashLedgerEntry mapLedgerEntry(
+  CashLedgerTableData data, {
+  UsersTableData? user,
+}) => CashLedgerEntry(
+  id: data.id,
+  type: mapLedgerType(data.type),
+  amount: data.amount,
+  refType: mapLedgerRefType(data.refType),
+  refId: data.refId,
+  note: data.note,
+  datetime: data.datetime,
+  user: user != null ? mapUser(user) : null,
+);
 
 SaleItem mapSaleItem(SaleItemsTableData data, {ProductsTableData? product}) =>
     SaleItem(
@@ -171,25 +173,27 @@ SaleItem mapSaleItem(SaleItemsTableData data, {ProductsTableData? product}) =>
     );
 
 Debt mapDebt(DebtsTableData data, Customer customer) => Debt(
-      id: data.id,
-      saleId: data.saleId,
-      customer: customer,
-      principal: data.principal,
-      remaining: data.remaining,
-      status: mapDebtStatus(data.status),
-      createdAt: data.createdAt,
-    );
+  id: data.id,
+  saleId: data.saleId,
+  customer: customer,
+  principal: data.principal,
+  remaining: data.remaining,
+  status: mapDebtStatus(data.status),
+  createdAt: data.createdAt,
+);
 
-DebtPayment mapDebtPayment(DebtPaymentsTableData data, {UsersTableData? user}) =>
-    DebtPayment(
-      id: data.id,
-      debtId: data.debtId,
-      amount: data.amount,
-      method: mapDebtPaymentMethod(data.method),
-      datetime: data.datetime,
-      user: user != null ? mapUser(user) : null,
-      note: data.note,
-    );
+DebtPayment mapDebtPayment(
+  DebtPaymentsTableData data, {
+  UsersTableData? user,
+}) => DebtPayment(
+  id: data.id,
+  debtId: data.debtId,
+  amount: data.amount,
+  method: mapDebtPaymentMethod(data.method),
+  datetime: data.datetime,
+  user: user != null ? mapUser(user) : null,
+  note: data.note,
+);
 
 DashboardSummary mapDashboardSummary(
   int totalSales,
@@ -198,17 +202,11 @@ DashboardSummary mapDashboardSummary(
   int cashOut,
   int outstanding,
   int lowStock,
-) =>
-    DashboardSummary(
-      totalSalesToday: totalSales,
-      transactionsToday: transactions,
-      cashInToday: cashIn,
-      cashOutToday: cashOut,
-      outstandingDebt: outstanding,
-      lowStockCount: lowStock,
-    );
-
-
-
-
-
+) => DashboardSummary(
+  totalSalesToday: totalSales,
+  transactionsToday: transactions,
+  cashInToday: cashIn,
+  cashOutToday: cashOut,
+  outstandingDebt: outstanding,
+  lowStockCount: lowStock,
+);
